@@ -19,6 +19,45 @@ app.get("/musicians/:id", async (req, res) => {
     res.json(musician);
 });
 
+app.post("/musicians", async (req, res) => {
+    const { name, instrument } = req.body;
+    try {
+        await Musician.create({ name, instrument });
+        const allMusicians = await Musician.findAll();
+        res.json(allMusicians);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+});
+
+app.put("/musicians/:id", async (req, res) => {
+    const musicianId = req.params.id;
+    const { name, instrument } = req.body;
+    try {
+        const musician = await Musician.findByPk(musicianId);
+        if(!musician) {
+         res.status(400).json({error: error.message});
+        }
+        await musician.update({ name, instrument });
+        res.json({message: "Musician updated successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+});
+
+app.delete("/musicians/:id", async (req, res) => {
+    const musicianId = req.params.id;
+    try {
+        const musician = await Musician.findByPk(musicianId);
+        if(!musician) {
+         res.status(400).json({error: error.message});
+        }
+        await musician.destroy();
+        res.json({message: "Musician deleted successfully"});
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+});
   
 app.listen(port, () => {
     sequelize.sync();
