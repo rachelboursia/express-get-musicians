@@ -9,8 +9,6 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-//app.use('/musicians', require('./routes/musicians'));
-
 app.get("/musicians", async (req, res) => {
     const musicians = await Musician.findAll();
     res.json(musicians);
